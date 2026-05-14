@@ -8,6 +8,7 @@ const Home = () => {
   const navigate = useNavigate();
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [savedIds, setSavedIds] = useState(new Set());
   const [likedIds, setLikedIds] = useState(new Set());
   const [commentedIds, setCommentedIds] = useState(new Set());
@@ -102,6 +103,7 @@ const Home = () => {
     const fetchVideos = async () => {
       try {
         setLoading(true);
+        setError(null);
         let token = localStorage.getItem('token');
         
         console.log('Initial token check:', token ? 'Found' : 'Not found');
@@ -119,7 +121,7 @@ const Home = () => {
 
         console.log('API Response:', response.data);
 
-        if (response.data && response.data.foodItems && response.data.foodItems.length > 0) {
+        if (response.data && response.data.foodItems) {
           setVideos(response.data.foodItems);
           console.log('Videos loaded successfully:', response.data.foodItems.length);
         } else {
@@ -127,11 +129,11 @@ const Home = () => {
           setVideos([]);
         }
 
-      } catch (error) {
-        console.error('Error fetching videos:', error);
+      } catch (err) {
+        console.error('Error fetching videos:', err);
+        setError(err.message || 'Failed to connect to server');
         
-        
-        if (error.response?.status === 401) {
+        if (err.response?.status === 401) {
           console.log('Authentication failed, trying without token...');
           try {
             const publicResponse = await axios.get('http://localhost:3000/api/food', {
@@ -140,6 +142,7 @@ const Home = () => {
 
             if (publicResponse.data && publicResponse.data.foodItems) {
               setVideos(publicResponse.data.foodItems);
+              setError(null);
               console.log('Videos loaded without authentication');
             } else {
               setVideos([]);
@@ -147,9 +150,10 @@ const Home = () => {
           } catch (secondError) {
             console.error('Failed to fetch without authentication:', secondError);
             setVideos([]);
+            setError('Authentication failed. Please login to view the feed.');
           }
         } else {
-          console.error('API Error:', error.message);
+          console.error('API Error:', err.message);
           setVideos([]);
         }
       } finally {
@@ -203,11 +207,13 @@ const Home = () => {
   // Manual retry function
   const retryFetch = async () => {
     setLoading(true);
-    localStorage.removeItem('token');
+    setError(null);
     
     try {
-      let token = await autoLogin();
-      const response = await axios.get('http://localhost:3000/api/food', {
+      let token = localStorage.getItem('token');
+      if (!token) token = await autoLogin();
+
+      const response = await axios.get(`http://localhost:3000/api/food${activeMood ? `?mood=${activeMood}` : ''}`, {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
         withCredentials: true
       });
@@ -215,8 +221,9 @@ const Home = () => {
       if (response.data?.foodItems) {
         setVideos(response.data.foodItems);
       }
-    } catch (error) {
-      console.error('Retry failed:', error);
+    } catch (err) {
+      console.error('Retry failed:', err);
+      setError(err.message || 'Still unable to connect');
       setVideos([]);
     } finally {
       setLoading(false);
@@ -413,7 +420,7 @@ const Home = () => {
       )}
 
       {/* Error state */}
-      {!loading && videos.length === 0 && (
+      {!loading && (error || videos.length === 0) && (
         <div style={{
           position: 'fixed',
           top: '50%',
@@ -427,25 +434,51 @@ const Home = () => {
           borderRadius: 'var(--radius-xl)',
           border: '1px solid var(--glass-border)',
           boxShadow: 'var(--glass-shadow)',
-          width: 'min(400px, 90vw)'
+          width: 'min(400px, 90vw)',
+          zIndex: 50
         }}>
-          <div style={{ marginBottom: '1.5rem', color: '#ff6b6b' }}>
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-            </svg>
+          <div style={{ marginBottom: '1.5rem', color: error ? '#ff6b6b' : 'var(--accent-secondary)' }}>
+            {error ? (
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+            ) : (
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>
+              </svg>
+            )}
           </div>
-          <h3 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', fontWeight: 800 }}>Feed Unavailable</h3>
-          <p style={{ color: 'var(--color-muted)', marginBottom: '2rem' }}>We couldn't load the latest food videos. Check your connection or login to your account.</p>
+          <h3 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', fontWeight: 800 }}>
+            {error ? 'Feed Unavailable' : 'No Videos Found'}
+          </h3>
+          <p style={{ color: 'var(--color-muted)', marginBottom: '2rem' }}>
+            {error 
+              ? "We couldn't load the latest food videos. Check your connection or login to your account."
+              : activeMood 
+                ? `No videos found for the "${activeMood}" mood. Try another category!` 
+                : "The food feed is currently empty. Be the first to upload a food reel!"}
+          </p>
           <div style={{ display: 'grid', gap: '1rem' }}>
-            <button 
-              onClick={retryFetch}
-              className="form-btn"
-              style={{ padding: '0.8rem', fontSize: '0.9rem' }}
-            >
-              Retry Connection
-            </button>
+            {error ? (
+              <button 
+                onClick={retryFetch}
+                className="form-btn"
+                style={{ padding: '0.8rem', fontSize: '0.9rem' }}
+              >
+                Retry Connection
+              </button>
+            ) : activeMood ? (
+              <button 
+                onClick={() => { setActiveMood(null); localStorage.removeItem('activeMood'); }}
+                className="form-btn"
+                style={{ padding: '0.8rem', fontSize: '0.9rem' }}
+              >
+                Clear Mood Filter
+              </button>
+            ) : null}
+            
             <Link 
-              to="/choose-register" 
+              to={localStorage.getItem('token') ? "/create-food" : "/choose-register"} 
               style={{
                 color: 'var(--accent-secondary)',
                 textDecoration: 'none',
@@ -453,7 +486,7 @@ const Home = () => {
                 fontWeight: 600
               }}
             >
-              Go to Login Page
+              {localStorage.getItem('token') ? "Upload a Video" : "Go to Login Page"}
             </Link>
           </div>
         </div>
@@ -475,7 +508,8 @@ const Home = () => {
               muted
               playsInline
               loop
-              preload="metadata"
+              autoPlay
+              preload="auto"
             />
             <div className="reel-overlay">
               <div className="reel-overlay-gradient" aria-hidden="true" />
