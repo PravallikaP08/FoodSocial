@@ -1,0 +1,65 @@
+/* Centralized theme variables and tokens */
+:root {
+  /* Dark-first color palette */
+  --color-bg: #0f172a; /* main page background - navy */
+  --color-surface: #0b1220; /* card surface */
+  --color-text: #e2e8f0; /* main text */
+  --color-muted: #94a3b8; /* labels and subtle text */
+  --color-primary: #3b82f6; /* bright blue button */
+  --color-primary-600: #60a5fa; /* hover */
+  --color-border: #1f2937; /* subtle border */
+  --color-input-bg: #0f172a; /* input bg darker than surface */
+  /* Vibrant highlights */
+  --accent-primary: #4f46e5;
+  --accent-secondary: #06b6d4;
+  --color-success: #10b981;
+  --color-error: #ef4444;
+
+  /* Glassmorphism tokens */
+  --glass-bg: rgba(15, 23, 42, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --blur-amount: 12px;
+
+  /* Refined layout */
+  --container-width: 440px;
+  --radius-xl: 20px;
+  --radius-lg: 14px;
+  --radius-md: 10px;
+  
+  color-scheme: dark;
+}
+/* Light theme override */
+@media (prefers-color-scheme: light) {
+  :root {
+    --color-bg: #f8fafc;
+    --color-surface: #ffffff;
+    --color-text: #0f1720;
+    --color-muted: #6b7280;
+    --color-primary: #3b82f6;
+    --color-primary-600: #3466c2;
+    --color-border: #e6e9ee;
+    --color-input-bg: #ffffff;
+    --color-card-shadow: rgba(16,24,40,0.06);
+    --shadow-1: 0 6px 18px var(--color-card-shadow);
+    color-scheme: light dark;
+  }
+}
+
+/* Link colors for user vs partner actions */
+:root {
+  --color-user-link: var(--color-primary);
+  --color-partner-link: var(--color-primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-fast: 0ms;
+  }
+}
+
+/* Utility */
+.surface {
+  background: var(--color-surface);
+  color: var(--color-text);
+}
