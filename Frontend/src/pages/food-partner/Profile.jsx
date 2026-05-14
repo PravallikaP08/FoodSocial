@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/profile.css";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 // To use a local image, you should place it in 'src/assets/' and import it like this:
@@ -18,6 +18,8 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [videos, setVideos] = useState([]);
+  const [isOwner, setIsOwner] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -42,6 +44,15 @@ const Profile = () => {
     };
 
     if (id) fetchProfile();
+
+    // Check if current user is the owner of this profile
+    const info = localStorage.getItem("partnerInfo");
+    if (info) {
+      const partner = JSON.parse(info);
+      if (partner.id === id || partner._id === id) {
+        setIsOwner(true);
+      }
+    }
   }, [id]);
 
   if (loading) {
@@ -74,9 +85,9 @@ const Profile = () => {
       <section className="profile-header">
         <div className="profile-card-inner">
           <div className="avatar-circle">
-            {(AVATAR_IMAGE_PATH || profileData?.profileImage) ? (
+            {(profileData?.profileImage || AVATAR_IMAGE_PATH) ? (
               <img 
-                src={AVATAR_IMAGE_PATH || profileData.profileImage} 
+                src={profileData.profileImage || AVATAR_IMAGE_PATH} 
                 alt="Profile" 
                 className="avatar-img"
                 onError={(e) => {
@@ -100,6 +111,25 @@ const Profile = () => {
               </svg>
               <p className="business-address-text">{profileData?.address}</p>
             </div>
+            {isOwner && (
+              <button 
+                onClick={() => navigate('/food-partner/edit')} 
+                className="edit-profile-btn"
+                style={{
+                  marginTop: '15px',
+                  background: 'rgba(59, 70, 246, 0.1)',
+                  color: '#3b82f6',
+                  border: '1px solid #3b82f6',
+                  padding: '6px 12px',
+                  borderRadius: '6px',
+                  fontSize: '13px',
+                  fontWeight: '600',
+                  cursor: 'pointer'
+                }}
+              >
+                Edit Store Profile
+              </button>
+            )}
           </div>
         </div>
 

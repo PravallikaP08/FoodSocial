@@ -24,6 +24,7 @@ const FoodPartnerLogin = () => {
       );
       console.log("✅ Partner Login Successful:", response.data);
       localStorage.setItem("token", response.data.token);
+      localStorage.setItem("partnerInfo", JSON.stringify(response.data.foodPartner));
       navigate("/create-food");
     } catch (err) {
       console.error("❌ Login Error:", err.response?.data || err.message);
