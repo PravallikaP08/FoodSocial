@@ -2,6 +2,7 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../styles/auth-shared.css";
 import axios from "axios";
+import API_BASE_URL from "../../config";
 
 const UserLogin = () => {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ const UserLogin = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/auth/user/login",
+        `${API_BASE_URL}/api/auth/user/login`,
         { email, password },
         { withCredentials: true }
       );

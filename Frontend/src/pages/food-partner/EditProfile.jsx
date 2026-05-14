@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../../styles/auth-shared.css';
 import axios from 'axios';
+import API_BASE_URL from '../../config';
 import { useNavigate } from 'react-router-dom';
 
 const EditProfile = () => {
@@ -51,7 +52,7 @@ const EditProfile = () => {
             Object.keys(formData).forEach(key => data.append(key, formData[key]));
             if (profileImage) data.append("profileImage", profileImage);
 
-            const response = await axios.put("http://localhost:3000/api/food-partner/update", data, {
+            const response = await axios.put(`${API_BASE_URL}/api/food-partner/update`, data, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${token}`

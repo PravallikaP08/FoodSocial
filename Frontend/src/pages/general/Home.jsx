@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import axios from 'axios';
+import API_BASE_URL from '../../config';
 import '../../styles/reels.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
@@ -33,7 +34,7 @@ const Home = () => {
       };
 
       
-      const loginResponse = await axios.post('http://localhost:3000/api/auth/user/login', loginData, {
+      const loginResponse = await axios.post(`${API_BASE_URL}/api/auth/user/login`, loginData, {
         withCredentials: true
       });
 
@@ -83,7 +84,7 @@ const Home = () => {
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          const res = await axios.get('http://localhost:3000/api/food/saved', {
+          const res = await axios.get(`${API_BASE_URL}/api/food/saved`, {
             headers: { Authorization: `Bearer ${token}` },
             withCredentials: true
           });
@@ -136,7 +137,7 @@ const Home = () => {
         if (err.response?.status === 401) {
           console.log('Authentication failed, trying without token...');
           try {
-            const publicResponse = await axios.get('http://localhost:3000/api/food', {
+            const publicResponse = await axios.get(`${API_BASE_URL}/api/food`, {
               withCredentials: true
             });
 
@@ -213,7 +214,7 @@ const Home = () => {
       let token = localStorage.getItem('token');
       if (!token) token = await autoLogin();
 
-      const response = await axios.get(`http://localhost:3000/api/food${activeMood ? `?mood=${activeMood}` : ''}`, {
+      const response = await axios.get(`${API_BASE_URL}/api/food${activeMood ? `?mood=${activeMood}` : ''}`, {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
         withCredentials: true
       });
@@ -239,7 +240,7 @@ const Home = () => {
         return;
       }
 
-      const response = await axios.post('http://localhost:3000/api/food/save', { foodId }, {
+      const response = await axios.post(`${API_BASE_URL}/api/food/save`, { foodId }, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true
       });
@@ -272,7 +273,7 @@ const Home = () => {
         return;
       }
 
-      const response = await axios.post("http://localhost:3000/api/food/like", { foodId }, {
+      const response = await axios.post(`${API_BASE_URL}/api/food/like`, { foodId }, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true
       });
@@ -306,7 +307,7 @@ const Home = () => {
       setCommentText("");
       setCommentsList([]);
       try {
-        const response = await axios.get(`http://localhost:3000/api/food/${foodId}/comments`, {
+        const response = await axios.get(`${API_BASE_URL}/api/food/${foodId}/comments`, {
           withCredentials: true
         });
         if (response.data.success) {
@@ -328,7 +329,7 @@ const Home = () => {
         alert("Please login to comment!");
         return;
       }
-      const response = await axios.post('http://localhost:3000/api/food/comment', { foodId, text: commentText }, {
+      const response = await axios.post(`${API_BASE_URL}/api/food/comment`, { foodId, text: commentText }, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true
       });

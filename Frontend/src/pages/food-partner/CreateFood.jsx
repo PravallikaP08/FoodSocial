@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../../styles/CreateFood.css';
 import axios from 'axios';
+import API_BASE_URL from '../../config';
 import { useNavigate } from 'react-router-dom'; 
 
 const CreateFood = () => {
@@ -62,7 +63,7 @@ const CreateFood = () => {
                 return;
             }
             
-            const response = await axios.post("http://localhost:3000/api/food", formData, {
+            const response = await axios.post(`${API_BASE_URL}/api/food`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${token}`

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import API_BASE_URL from '../../config';
 import '../../styles/reels.css';
 import { Link } from 'react-router-dom';
 
@@ -37,7 +38,7 @@ const Saved = () => {
   const autoLogin = async () => {
     try {
       const loginData = { email: 'demo@example.com', password: 'password123' };
-      const res = await axios.post('http://localhost:3000/api/auth/user/login', loginData, { withCredentials: true });
+      const res = await axios.post(`${API_BASE_URL}/api/auth/user/login`, loginData, { withCredentials: true });
       if (res.data?.token) {
         localStorage.setItem('token', res.data.token);
         return res.data.token;
@@ -63,7 +64,7 @@ const Saved = () => {
         return;
       }
 
-      const response = await axios.get('http://localhost:3000/api/food/saved', {
+      const response = await axios.get(`${API_BASE_URL}/api/food/saved`, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true
       });
@@ -106,7 +107,7 @@ const Saved = () => {
         return;
       }
 
-      const response = await axios.post('http://localhost:3000/api/food/save', { foodId }, {
+      const response = await axios.post(`${API_BASE_URL}/api/food/save`, { foodId }, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true
       });
@@ -142,7 +143,7 @@ const Saved = () => {
         return;
       }
 
-      const response = await axios.post("http://localhost:3000/api/food/like", { foodId }, {
+      const response = await axios.post(`${API_BASE_URL}/api/food/like`, { foodId }, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true
       });
@@ -176,7 +177,7 @@ const Saved = () => {
       setCommentText("");
       setCommentsList([]);
       try {
-        const response = await axios.get(`http://localhost:3000/api/food/${foodId}/comments`, {
+        const response = await axios.get(`${API_BASE_URL}/api/food/${foodId}/comments`, {
           withCredentials: true
         });
         if (response.data.success) {
@@ -198,7 +199,7 @@ const Saved = () => {
         alert("Please login to comment!");
         return;
       }
-      const response = await axios.post('http://localhost:3000/api/food/comment', { foodId, text: commentText }, {
+      const response = await axios.post(`${API_BASE_URL}/api/food/comment`, { foodId, text: commentText }, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true
       });

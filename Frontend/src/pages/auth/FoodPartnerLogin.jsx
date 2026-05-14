@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import API_BASE_URL from "../../config";
 import "../../styles/PartnerLogin.css";
 
 const FoodPartnerLogin = () => {
@@ -18,7 +19,7 @@ const FoodPartnerLogin = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/auth/food-partner/login",
+        `${API_BASE_URL}/api/auth/food-partner/login`,
         { email, password },
         { withCredentials: true }
       );

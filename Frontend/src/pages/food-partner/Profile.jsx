@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../../styles/profile.css";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import API_BASE_URL from "../../config";
 
 // To use a local image, you should place it in 'src/assets/' and import it like this:
 // import defaultAvatar from "../../assets/avatar.jpg";
@@ -25,7 +26,7 @@ const Profile = () => {
     const fetchProfile = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`http://localhost:3000/api/food-partner/${id}`, {
+        const response = await axios.get(`${API_BASE_URL}/api/food-partner/${id}`, {
           withCredentials: true,
           timeout: 10000
         });
