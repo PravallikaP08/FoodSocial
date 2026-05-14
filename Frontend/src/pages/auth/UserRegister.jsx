@@ -35,7 +35,7 @@ const UserRegister = () => {
       navigate("/user/login");
     } catch (error) {
       console.error("Registration error:", error);
-      alert(error.response?.data?.message || "Registration failed. Please try again.");
+      alert(error.response?.data?.message || error.response?.data || "Registration failed. Please try again.");
     }
   };
 

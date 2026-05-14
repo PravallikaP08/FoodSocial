@@ -34,7 +34,7 @@ const UserLogin = () => {
       navigate("/feed");
     } catch (error) {
       console.error("❌ Login error:", error.response?.data || error.message);
-      alert("Login failed. Please check your credentials.");
+      alert(error.response?.data?.message || error.response?.data || "Login failed. Please check your credentials.");
     }
   };
 
