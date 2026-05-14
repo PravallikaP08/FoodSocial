@@ -132,7 +132,13 @@ const Home = () => {
 
       } catch (err) {
         console.error('Error fetching videos:', err);
-        setError(err.message || 'Failed to connect to server');
+        const errorMsg = err.response?.data?.message || err.message || 'Failed to connect to server';
+        setError(errorMsg);
+        
+        // Show alert for debugging on mobile
+        if (window.location.hostname.includes('onrender.com')) {
+          alert("Feed Error: " + errorMsg);
+        }
         
         if (err.response?.status === 401) {
           console.log('Authentication failed, trying without token...');
@@ -363,16 +369,19 @@ const Home = () => {
       {/* Mood Selector */}
       <div style={{
         position: 'fixed',
-        top: '20px',
+        top: 'env(safe-area-inset-top, 20px)',
         left: '0',
         right: '0',
         display: 'flex',
-        justifyContent: 'center',
-        gap: '10px',
+        justifyContent: 'flex-start',
+        gap: '12px',
         zIndex: 100,
-        padding: '0 20px',
+        padding: '15px 20px',
         overflowX: 'auto',
-        scrollbarWidth: 'none'
+        scrollbarWidth: 'none',
+        msOverflowStyle: 'none',
+        maskImage: 'linear-gradient(to right, black 85%, transparent 100%)',
+        WebkitMaskImage: 'linear-gradient(to right, black 85%, transparent 100%)'
       }}>
         {['Happy', 'Lazy', 'Healthy', 'Budget', 'Party'].map(mood => (
           <button
@@ -384,18 +393,22 @@ const Home = () => {
               else localStorage.removeItem('activeMood');
             }}
             style={{
-              padding: '8px 20px',
-              borderRadius: '25px',
-              border: 'none',
-              background: activeMood === mood ? 'var(--accent-primary)' : 'rgba(255,255,255,0.2)',
+              padding: '10px 22px',
+              borderRadius: '30px',
+              border: activeMood === mood ? '2px solid rgba(255,255,255,0.8)' : '1px solid rgba(255,255,255,0.1)',
+              background: activeMood === mood 
+                ? 'linear-gradient(135deg, #3b46f6 0%, #1e293b 100%)' 
+                : 'rgba(255,255,255,0.08)',
               color: 'white',
-              backdropFilter: 'blur(10px)',
+              backdropFilter: 'blur(15px)',
               cursor: 'pointer',
-              fontWeight: '600',
-              fontSize: '14px',
+              fontWeight: '700',
+              fontSize: '13px',
               whiteSpace: 'nowrap',
-              transition: 'all 0.3s ease',
-              boxShadow: activeMood === mood ? '0 4px 15px rgba(0,0,0,0.3)' : 'none'
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              boxShadow: activeMood === mood ? '0 8px 20px rgba(0,0,0,0.4)' : '0 4px 10px rgba(0,0,0,0.1)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.5px'
             }}
           >
             {mood}
