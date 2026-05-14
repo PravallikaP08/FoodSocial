@@ -10,7 +10,7 @@ import axios from "axios";
 // To add an image: 
 // 1. Use an online URL (like "https://example.com/photo.jpg")
 // 2. OR move your file to "Frontend/public/" and use "/your-file-name.jpg"
-const AVATAR_IMAGE_PATH = "https://plus.unsplash.com/premium_photo-1690407617686-d449aa2aad3c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"; // <-- PASTE YOUR IMAGE LINK HERE
+const AVATAR_IMAGE_PATH = "https://images.unsplash.com/photo-1514933651103-005eec06c04b?q=80&w=1074&auto=format&fit=crop"; // Food-themed default photo
 
 const Profile = () => {
   const { id } = useParams();
@@ -90,9 +90,16 @@ const Profile = () => {
           </div>
           <div className="header-text">
             <div className="business-labels">
-              <span className="business-name-tag">{profileData?.name}</span>
+              <h1 className="business-name-tag">{profileData?.restaurantName || profileData?.name}</h1>
+              <span className="partner-name">by {profileData?.fullName}</span>
             </div>
-            <p className="business-address-text">{profileData?.address}</p>
+            <div className="business-address">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+              <p className="business-address-text">{profileData?.address}</p>
+            </div>
           </div>
         </div>
 

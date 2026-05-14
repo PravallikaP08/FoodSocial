@@ -64,21 +64,31 @@
 }
 
 .business-name-tag {
-  background: #1e293b;
-  color: #f8fafc;
-  padding: 8px 20px;
-  border-radius: 8px;
-  font-size: 18px;
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: 800;
+  margin: 0;
+  display: block;
+}
+
+.partner-name {
+  color: #3b82f6;
+  font-size: 14px;
   font-weight: 600;
-  margin-bottom: 4px;
-  display: inline-block;
+  opacity: 0.8;
+}
+
+.business-address {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  color: #94a3b8;
 }
 
 .business-address-text {
-  color: #64748b;
   font-size: 14px;
   margin: 0;
-  padding-left: 2px;
 }
 
 .profile-stats {

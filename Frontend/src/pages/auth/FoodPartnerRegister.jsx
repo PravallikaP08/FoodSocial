@@ -9,12 +9,12 @@ const FoodPartnerRegister = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const businessName = e.target.businessName.value;
-    const contactName = e.target.contactName.value;
-    const phone = e.target.phone.value;
-    const email = e.target.email.value;
-    const password = e.target.password.value;
-    const address = e.target.address.value;
+    const businessName = e.target.businessName.value.trim();
+    const contactName = e.target.contactName.value.trim();
+    const phone = e.target.phone.value.trim();
+    const email = e.target.email.value.trim();
+    const password = e.target.password.value.trim();
+    const address = e.target.address.value.trim();
 
     if (!businessName || !contactName || !phone || !email || !password || !address) {
       alert("Please fill in all fields");
@@ -23,7 +23,7 @@ const FoodPartnerRegister = () => {
 
     axios
       .post(
-        "http://https://foodsocial-backend.onrender.com/api/auth/food-partner/register",
+        "http://localhost:3000/api/auth/food-partner/register",
         {
           fullName: contactName,
           email,

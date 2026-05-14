@@ -9,8 +9,8 @@ const UserLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const email = e.target.email.value;
-    const password = e.target.password.value;
+    const email = e.target.email.value.trim();
+    const password = e.target.password.value.trim();
 
     try {
       const response = await axios.post(
@@ -30,7 +30,7 @@ const UserLogin = () => {
       }
 
       // ✅ Redirect after login
-      navigate("/");
+      navigate("/feed");
     } catch (error) {
       console.error("❌ Login error:", error.response?.data || error.message);
       alert("Login failed. Please check your credentials.");

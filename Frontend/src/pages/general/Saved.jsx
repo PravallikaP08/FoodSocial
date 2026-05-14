@@ -236,7 +236,7 @@ const Saved = () => {
         <div style={{ padding: '2rem', textAlign: 'center', color: 'white', marginTop: '20vh' }}>
           <h2 style={{ fontWeight: 800 }}>No Saved Reels</h2>
           <p style={{ opacity: 0.6, margin: '1rem 0 2rem' }}>Go to the feed and save some food videos!</p>
-          <Link to="/" className="reel-button">Explore Food</Link>
+          <Link to="/feed" className="reel-button">Explore Food</Link>
         </div>
       ) : (
         <div className="reels-feed" role="list">

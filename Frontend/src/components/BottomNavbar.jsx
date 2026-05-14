@@ -6,7 +6,7 @@ const BottomNavbar = () => {
   return (
     <nav className="bottom-nav">
       <NavLink 
-        to="/" 
+        to="/feed" 
         className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
       >
         <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2">

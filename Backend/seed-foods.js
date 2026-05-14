@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const foodModel = require('./src/models/food.model');
 const foodPartnerModel = require('./src/models/foodpartner.model');
+const bcrypt = require('bcryptjs');
 
 async function seedFoods() {
   try {
@@ -9,12 +10,14 @@ async function seedFoods() {
     console.log('Connected to MongoDB');
 
     // 1. Create a demo food partner if it doesn't exist
-    let partner = await foodPartnerModel.findOne({ email: 'demo-partner@example.com' });
+    const demoEmail = 'demo-partner@example.com';
+    let partner = await foodPartnerModel.findOne({ email: demoEmail });
     if (!partner) {
+      const hashedPassword = await bcrypt.hash('password123', 10);
       partner = await foodPartnerModel.create({
         fullName: 'Chef Demo',
-        email: 'demo-partner@example.com',
-        password: 'password123', // In a real app, this should be hashed
+        email: demoEmail,
+        password: hashedPassword,
         restaurantName: 'Demo Delights',
         phone: '1234567890',
         address: '123 Demo Street'

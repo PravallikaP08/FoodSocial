@@ -1,7 +1,7 @@
 const userModel = require("../models/user.model");
 const foodPartnerModel = require("../models/foodpartner.model");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 // Helper function to generate token
 const generateToken = (id) => {
@@ -13,8 +13,14 @@ const generateToken = (id) => {
 // User Registration
 async function registerUser(req, res) {
     try {
-        const { fullName, email, password } = req.body;
+        const { fullName } = req.body;
+        const email = req.body.email?.toLowerCase().trim();
+        const password = req.body.password?.trim();
         
+        if (!email || !password) {
+            return res.status(400).json({ message: "Email and password are required" });
+        }
+
         // Check if user already exists
         const existingUser = await userModel.findOne({ email });
         if (existingUser) {
@@ -60,8 +66,13 @@ async function registerUser(req, res) {
 // User Login
 async function loginUser(req, res) {
     try {
-        const { email, password } = req.body;
+        const email = req.body.email?.toLowerCase().trim();
+        const password = req.body.password?.trim();
         
+        if (!email || !password) {
+            return res.status(400).json({ message: "Email and password are required" });
+        }
+
         // Find user
         const user = await userModel.findOne({ email });
         if (!user) {
@@ -117,8 +128,14 @@ async function logoutUser(req, res) {
 // Food Partner Registration
 async function registerFoodPartner(req, res) {
     try {
-        const { fullName, email, password, restaurantName, phone, address } = req.body;
+        const { fullName, restaurantName, phone, address } = req.body;
+        const email = req.body.email?.toLowerCase().trim();
+        const password = req.body.password?.trim();
         
+        if (!email || !password) {
+            return res.status(400).json({ message: "Email and password are required" });
+        }
+
         // Check if partner already exists
         const existingPartner = await foodPartnerModel.findOne({ email });
         if (existingPartner) {
@@ -168,8 +185,13 @@ async function registerFoodPartner(req, res) {
 // Food Partner Login
 async function loginFoodPartner(req, res) {
     try {
-        const { email, password } = req.body;
+        const email = req.body.email?.toLowerCase().trim();
+        const password = req.body.password?.trim();
         
+        if (!email || !password) {
+            return res.status(400).json({ message: "Email and password are required" });
+        }
+
         // Find food partner
         const foodPartner = await foodPartnerModel.findOne({ email });
         if (!foodPartner) {
