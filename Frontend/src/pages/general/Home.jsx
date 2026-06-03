@@ -115,7 +115,7 @@ const Home = () => {
         }
 
         // Try to fetch videos with token if available
-        const response = await axios.get(`http://localhost:3000/api/food${activeMood ? `?mood=${activeMood}` : ''}`, {
+        const response = await axios.get(`${API_BASE_URL}/api/food${activeMood ? `?mood=${activeMood}` : ''}`, {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
           withCredentials: true
         });
