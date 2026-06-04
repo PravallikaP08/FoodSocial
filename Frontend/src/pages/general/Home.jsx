@@ -516,15 +516,16 @@ const Home = () => {
             onClick={() => handleVideoClick(item._id)}
           >
             <video
-              ref={setVideoRef(item._id)}
-              className="reel-video"
-              src={item.video}
-              muted
-              playsInline
-              loop
-              autoPlay
-              preload="auto"
-            />
+  ref={setVideoRef(item._id)}
+  className="reel-video"
+  src={item.video}
+  controls
+  muted
+  playsInline
+  loop
+  autoPlay
+  preload="metadata"
+/>
             <div className="reel-overlay">
               <div className="reel-overlay-gradient" aria-hidden="true" />
               
